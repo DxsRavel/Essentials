@@ -1,6 +1,6 @@
 <?php
 
-namespace DxsRavel\Skeleton;
+namespace DxsRavel\Essentials;
 
 class Daxes{
    
