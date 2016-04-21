@@ -34,7 +34,9 @@
         }
     },
     "scripts": {
-        
+        "post-root-package-install": [
+            "php -r \"copy('vendor/dxsravel/essentials/views', 'resources/views/DxsRavel');\""
+        ]
     },
     "extra": {
         "branch-alias": {
