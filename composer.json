@@ -1,13 +1,13 @@
 {
-    "name": "dxsravel/skeleton",
+    "name": "dxsravel/essentials",
     "type": "library",
-    "description": "Sekeleton for create libraries",
+    "description": "DxsRavel Essentials Libs",
     "keywords": [
         "daxes",
         "dxsravel",
         "laravel"
     ],
-    "homepage": "https://github.com/DxsRavel/Skeleton",
+    "homepage": "https://github.com/DxsRavel/Essentials",
     "license": "MIT",
     "authors": [
         {
@@ -25,12 +25,12 @@
     },
     "autoload": {
         "psr-4": {            
-            "DxsRavel\\Skeleton\\": "src"
+            "DxsRavel\\Essentials\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {            
-            "DxsRavel\\Skeleton\\": "tests"
+            "DxsRavel\\Essentials\\": "tests"
         }
     },
     "scripts": {
