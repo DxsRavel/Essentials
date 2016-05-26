@@ -29,7 +29,7 @@ class BaseService{
 	protected function appendAjaxMessages($arr){
 		if(strlen($arr['message'])>0) $this->message .= ', '.$arr['message'];		
 	}
-	function getLastQuery(){ 			
+	static function getLastQuery(){ 			
 		$queries = DB::getQueryLog();
  		return last( $queries );
 	}

@@ -111,7 +111,7 @@ trait ServiceCRUD{
 			foreach($this->Model->getFillable() as $column){
 				if(isset($new[$column])) $update_arr[$column] = $new[$column];			
 			}
-			try{
+			try{				
 				$Query = DB::table( $this->Model->getTable() );
 				foreach($this->Model->getPrimaryKeys() as $column){
 					$Query->where($column,$old[$column]);
@@ -165,7 +165,12 @@ trait ServiceCRUD{
 	function editarOcrear($old,$new){
 		if(! $this->existe($old) ){
 			$new2 = $new;
-			if(is_array($old) && count($old)>0) $new2 = array_merge($new,$old);
+			if(is_array($old) && count($old)>0){
+				//$new2 = array_merge($new,$old);
+				foreach($old as $k => $v){
+					$new2[$k] = $v;
+				}
+			}
 			return $this->agregar($new2);
 		}else{
 			return $this->editar($old,$new);
