@@ -1,8 +1,9 @@
 <?php namespace DxsRavel\Essentials\Pdf;
 
-use Anouar\Fpdf\Fpdf;
+//use Anouar\Fpdf\Fpdf;
+use Codedge\Fpdf\Fpdf\FPDF;
 
-class BaseFpdf extends Fpdf {
+class BaseFpdf extends FPDF {
 	protected $lh; //Line Height
 	protected $pln = 0.6; //percent line height
 	public function SetFont($family, $style='', $size=0, $save = true){
@@ -15,7 +16,7 @@ class BaseFpdf extends Fpdf {
 	public function FontSize($size,$save = true){ return $this->SetFont($this->FontFamily,'',$size,$save); }
 
 	function titleCenter($txt){
-		$this->SetFont('Arial','B',10);
+		//$this->SetFont('Arial','B',10);
 		$this->Cell($this->w - $this->lMargin - $this->rMargin,8, utf8_decode($txt) ,0,0,'C');
 		$this->Ln();
 	}
@@ -104,19 +105,39 @@ class BaseFpdf extends Fpdf {
 		$this->Cell($w,$h,utf8_decode($txt),$border,$ln,$align,$fill,$link);
 	}
 	public function CellText($w,$txt,$border=0, $ln=0, $align='', $fill=false, $link=''){
-		$this->Cell($w,$this->lh,utf8_decode($txt),$border,$ln,$align,$fill,$link);
+		$this->Cell($w,$this->lh,$txt,$border,$ln,$align,$fill,$link);
+	}
+	public function CellTextUTF8($w,$txt,$border=0, $ln=0, $align='', $fill=false, $link=''){
+		$this->CellUTF8($w,$this->lh,$txt,$border,$ln,$align,$fill,$link);
+	}
+	public function CellTextUTF8Col($p,$txt,$border=0, $ln=0, $align='', $fill=false, $link=''){
+		$wp = $this->w - $this->lMargin - $this->rMargin;
+		$w = $wp*($p/100);
+		$this->CellTextUTF8($w,$txt,$border,$ln,$align,$fill,$link);
+	}
+	public function CellTextCol($p,$txt,$border=0, $ln=0, $align='', $fill=false, $link=''){
+		$wp = $this->w - $this->lMargin - $this->rMargin;
+		$w = $wp*($p/100);
+		$this->CellText($w,$txt,$border,$ln,$align,$fill,$link);
 	}
 	public function CellTextB($w,$txt,$align = ''){
 		$this->Cell($w,$this->lh,utf8_decode($txt),1,0,$align);	
+	}
+	public function MultiCellText($w,$txt,$border=0, $ln=0, $align='',$fill = false){
+		$this->MultiCell($w,$this->lh,$txt,$border,$ln,$align,$fill);
+	}
+	public function MultiCellTextUTF8($w,$txt,$border=0, $ln=0, $align='',$fill = false){
+		$this->MultiCell($w,$this->lh,utf8_decode($txt),$border,$ln,$align,$fill);
 	}
 
 	public function TextUTF8($x,$y,$txt){
 		$this->Text($x,$y,utf8_decode($txt));
 	}
-	public function TextCenter($y,$txt){
+	public function TextCenter($y,$txt,$keepY = false){
 		$w = $this->w - $this->lMargin - $this->rMargin;
-		$l = strlen($y);
+		$l = strlen($txt)*($this->FontSizePt/6);
 		$x = ($w-$l)/2;
+		if($keepY){ $this->y = $y; $this->Ln(); }
 		$this->Text($x,$y,$txt);
 	}
 	public function hr(){
