@@ -11,8 +11,7 @@ use Form;
 class ExtendFormBuilderServiceProvider extends  ServiceProvider {
 
     //boot 
-    public function boot()
-    {
+    public function boot(){
         Form::macro('selectGrouped',function($name, $list = array(), $selected = null, $options = array()){
             
             $selected = $this->getValueAttribute($name, $selected);
@@ -36,8 +35,7 @@ class ExtendFormBuilderServiceProvider extends  ServiceProvider {
 
     }//end boot 
 
-     public function register()
-    {
+     public function register(){
         //
     }
 
