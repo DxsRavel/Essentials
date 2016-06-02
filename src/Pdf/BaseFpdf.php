@@ -6,14 +6,16 @@ use Codedge\Fpdf\Fpdf\FPDF;
 class BaseFpdf extends FPDF {
 	protected $lh; //Line Height
 	protected $pln = 0.6; //percent line height
+	protected $angle = 0;
+	
 	public function SetFont($family, $style='', $size=0, $save = true){
 		if($save) $this->lh = $size*$this->pln;
 		return parent::SetFont($family,$style,$size);
 	}	
 	public function Font($family, $style='', $size=0,$save = true){ return $this->SetFont($family,$style,$size,$save); }
-	public function FontFamily($family,$save = true){ return $this->SetFont($family,'',0,$ave); }
-	public function FontStyle($style,$save = true){ return $this->SetFont($this->FontFamily,$style,0,$save); }
-	public function FontSize($size,$save = true){ return $this->SetFont($this->FontFamily,'',$size,$save); }
+	public function setFontFamily($family,$save = true){ return $this->SetFont($family,'',0,$save); }
+	public function setFontStyle($style,$save = true){ return $this->SetFont($this->FontFamily,$style,0,$save); }
+	public function setFontSize($size,$save = true){ return $this->SetFont($this->FontFamily,'',$size,$save); }
 
 	function titleCenter($txt){
 		//$this->SetFont('Arial','B',10);
@@ -207,5 +209,27 @@ class BaseFpdf extends FPDF {
 				];
 		return @$meses[$m];
 	}
+
+	function Rotate($angle,$x=-1,$y=-1) { 
+
+	    if($x==-1) 
+	        $x=$this->x; 
+	    if($y==-1) 
+	        $y=$this->y; 
+	    if($this->angle!=0) 
+	        $this->_out('Q'); 
+	    $this->angle=$angle; 
+	    if($angle!=0) 
+
+	    { 
+	        $angle*=M_PI/180; 
+	        $c=cos($angle); 
+	        $s=sin($angle); 
+	        $cx=$x*$this->k; 
+	        $cy=($this->h-$y)*$this->k; 
+
+	        $this->_out(sprintf('q %.5f %.5f %.5f %.5f %.2f %.2f cm 1 0 0 1 %.2f %.2f cm',$c,$s,-$s,$c,$cx,$cy,-$cx,-$cy));
+	     } 
+	} 	
 }	
 ?>
