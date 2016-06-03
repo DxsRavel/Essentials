@@ -13,16 +13,22 @@ trait ServiceCRUD{
 	function clearLastModel(){
 		$this->LastModel = false;
 	}
-	function listar($where = []){
+	function primero($where = []){
 		$Query = DB::table( $this->Model->getTable() );
 		foreach($where as $key => $val){
 			$Query->where($key,$val);
 		}
+		return $Query->first();
+	}
+	function listar($where = [],$order=[]){
+		$Query = DB::table( $this->Model->getTable() );
+		foreach($where as $key => $val){
+			$Query->where($key,$val);
+		}
+		foreach($order as $c => $t){
+			$Query->orderBy($c,$t);
+		}
 		return $Query->get();
-		return DB::table($this->Model->getTable())
-				 //->whereNull('FECHA_HORA_BORRADO')
-				 //->orderBy($this->Model->getStatusColumn())
-				 ->get();
 	}
 	function listarNoBorrados(){
 		return DB::table($this->Model->getTable())
