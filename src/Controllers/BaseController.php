@@ -14,6 +14,8 @@ abstract class BaseController extends LaravelController {
 	function setResponseMessage($message){ $this->response['message'] = $message; }
 	function getResponseMessage(){ return $this->response['message']; }
 
+	function setResponseError($error = true){ $this->response['error'] = $error;}
+
 	protected function setAjaxMessages($arr){
 		$this->response['message'] = $arr['message'];
 		$this->response['title'] = $arr['title'];
