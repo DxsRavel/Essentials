@@ -42,8 +42,8 @@ trait ServiceCRUD{
 				 ->orderBy($this->Model->getStatusColumn())
 				 ->get();
 	}
-	function listarLista($where = []){
-		$Lista = $this->listar($where);
+	function listarLista($where = [],$order=[]){
+		$Lista = $this->listar($where,$order);
 		$ret = array(); 
 		foreach($Lista as $Model){
 			$ret[ $this->Model->getHandleKeys($Model) ] =  $Model;
