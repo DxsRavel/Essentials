@@ -50,8 +50,8 @@ trait ServiceCRUD{
 		}
 		return $ret;
 	}
-	function listarArray($where = [],$dummy = false){
-		$Lista = $this->listar($where);
+	function listarArray($where = [],$dummy = false,$order = []){
+		$Lista = $this->listar($where,$order);
 		$ret = array(); 
 		if($dummy) $ret['0'] = $dummy;
 		foreach($Lista as $Model){
