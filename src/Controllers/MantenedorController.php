@@ -7,12 +7,14 @@ use Input;
 class MantenedorController extends BaseController {
 	protected $Service;
 	protected $Model;
+	protected $puede = ['agregar'=>true,'editar'=>true,'borrar'=>true];
+
 	function post($accion){
 		return $this->$accion();
 	}
 	function index(){
 		$Lista = $this->Service->listar();
-		return view('DxsRavel.mantenedor.master')->with('Lista',$Lista)->with('Model',$this->Model);
+		return view('DxsRavel.mantenedor.master')->with('Lista',$Lista)->with('Model',$this->Model)->with($this->puede);
 	}	
 	function agregar(){
 		$new = Input::get('new');
