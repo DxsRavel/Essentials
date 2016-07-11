@@ -1,6 +1,6 @@
 <div class="panel panel-default">
 	<div class="panel-heading">
-		<strong>Mantenedor - {{ $Model->getName() }}</strong>
+		<strong>{{ Config::has('dxsravel.maintainer-title')?Config::get('dxsravel.maintainer-title'):'Mantenedor' }} - {{ $Model->getName() }}</strong>
 		{{--<a class="btn btn-xs btn-success pull-right" id="btn-agregar-item"><i class="fa fa-plus"></i> Agregar</a>--}}				
 	</div>
 	<table class="panel-body table table" id="tblista">

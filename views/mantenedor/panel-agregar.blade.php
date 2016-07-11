@@ -8,25 +8,25 @@
 		<label class="col-md-{{ $Input['label-col'] }}">{{ $Model->getLabel($column) }}:</label>
 		<div class="col-md-{{ $Input['input-col'] }}">
 			@if($Input['type'] == 'text')					
-			{!! Form::text($column,'',array_merge( ['class'=>'form-control new '.$column], $Input['tags']) ) !!}
+			{!! Form::text($column,$Model->$column,array_merge( ['class'=>'form-control new '.$column], $Input['tags']) ) !!}
 			@endif
 			@if($Input['type'] == 'color')					
-			{!! Form::text($column,'',array_merge( ['class'=>'form-control new colorpicker '.$column], $Input['tags']) ) !!}
+			{!! Form::text($column,$Model->$column,array_merge( ['class'=>'form-control new colorpicker '.$column], $Input['tags']) ) !!}
 			@endif			
 			@if($Input['type'] == 'select')
-			{!! Form::select($column,$Input['values'],'',array_merge( ['class'=>'form-control new '.$column], $Input['tags']) ) !!}	
+			{!! Form::select($column,$Input['values'],$Model->$column,array_merge( ['class'=>'form-control new '.$column], $Input['tags']) ) !!}	
 			@endif
 			@if($Input['type'] == 'email')					
-			{!! Form::email($column,'',array_merge( ['class'=>'form-control new '.$column], $Input['tags']) ) !!}
+			{!! Form::email($column,$Model->$column,array_merge( ['class'=>'form-control new '.$column], $Input['tags']) ) !!}
 			@endif
 			@if($Input['type'] == 'password')					
 			{!! Form::password($column,array_merge( ['class'=>'form-control new '.$column], $Input['tags']) ) !!}
 			@endif
 			@if($Input['type'] == 'select-grouped')
-			{!! Form::selectGrouped($column,$Input['values'],'', $Input['tags']) !!}	
+			{!! Form::selectGrouped($column,$Input['values'],$Model->$column, $Input['tags']) !!}	
 			@endif
 			@if($Input['type'] == 'group-list')
-			{!! Form::groupList($column,$Input['pivot'],$Input['list'],$Input['model'],'', array_merge( ['class'=>'form-control new '.$column], $Input['tags']) ,$Input['dummy']) !!}	
+			{!! Form::groupList($column,$Input['pivot'],$Input['list'],$Input['model'],$Model->$column, array_merge( ['class'=>'form-control new '.$column], $Input['tags']) ,$Input['dummy']) !!}	
 			@endif
 		</div>
 	</div>

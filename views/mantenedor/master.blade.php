@@ -1,21 +1,21 @@
-@extends('user.base')
+@extends('base')
 
 @section('title')
-Mantenedor | {{ $Model->getName() }}
+{{ Config::has('dxsravel.maintainer-title')?Config::get('dxsravel.maintainer-title'):'Mantenedor' }} | {{ $Model->getName() }}
 @stop
 
 @section('head_tags')    
-    {!! Html::style('assets/toastr/toastr.css') !!}        
+    {!! Html::style('assets/toastr-master/toastr.css') !!}        
     {!! Html::style('assets/bootstrap-colorpicker/css/colorpicker.css') !!}
 @stop
 
-@section('main-content-wrapper')
+@section('main-content')
 <div class="row row-mantenedor row-cabecera">
   <div class="col-md-7">
       <!--breadcrumbs start -->
       <ul class="breadcrumb" style="">
           <li><a href="{{URL::to('/inicio')}}"><i class="fa fa-home"></i> Inicio</a></li>
-          <li>Mantenedor</li>
+          <li>{{ Config::has('dxsravel.maintainer-title')?Config::get('dxsravel.maintainer-title'):'Mantenedor' }}</li>
           <li class="active">{{ $Model->getName() }}</li>
       </ul>    
       <!--breadcrumbs end -->
@@ -45,32 +45,30 @@ Mantenedor | {{ $Model->getName() }}
 @yield('row-middle')
 <div class="row row-mantenedor row-panel">    
 	<div class="col-md-7 panel-lista">
-		@include('DxsRavel.mantenedor.panel-listar')
+		@include('DxsRavel::mantenedor.panel-listar')
 	</div>
 	<div class="col-md-5 paneles-accion">		
 		@if($puede['borrar'])
-		@include('DxsRavel.mantenedor.panel-borrar')
+		@include('DxsRavel::mantenedor.panel-borrar')
 		@endif
 		
 		@if($puede['editar'])
-		@include('DxsRavel.mantenedor.panel-editar')
+		@include('DxsRavel::mantenedor.panel-editar')
 		@endif
 		
 		@if($puede['agregar'])
-		@include('DxsRavel.mantenedor.panel-agregar')
-		@include('DxsRavel.mantenedor.panel-reactivar')
+		@include('DxsRavel::mantenedor.panel-agregar')
+		@include('DxsRavel::mantenedor.panel-reactivar')
 		@endif		
 	</div>
 </div>
 @stop	
-@section('body_scripts')
-	@parent
-	{!! Html::script('js/jquery.scrollTo.min.js') !!}
-	{!! Html::script('js/respond.min.js') !!} 
-	{!! Html::script('assets/toastr/toastr.js') !!}	
+@section('script_tags')
+	@parent		
+	{!! Html::script('assets/toastr-master/toastr.js') !!}	
 
-	{!! Html::script('js/seahorse-1.2.js') !!}
-  	{!! Html::script('js/seahorse.jquery-1.2.js') !!}
+	{!! Html::script('assets/seahorse/seahorse-1.2.js') !!}
+  	{!! Html::script('assets/seahorse/seahorse.jquery-1.2.js') !!}
 
   	{!! Html::script('assets/bootstrap-colorpicker/js/bootstrap-colorpicker.js') !!}
   	<script>
@@ -79,7 +77,7 @@ Mantenedor | {{ $Model->getName() }}
   	});
   	</script>
 @stop
-@section('body_scripts_after')
+@section('body_scripts')
 @parent
 <script>
 var values = {};
@@ -119,7 +117,7 @@ var td_align = {};
 	$.fn.doAgregar = function(cols,visibles){ if(!visibles) visibles = cols;
 		var scope = this;
 		var btn = $('#sbmt-agregar');
-		var data = {};
+		var data = {'_token':'<?php echo csrf_token();?>'};
 		var data_new = {};
 		var error = false;
 		$.each( $('.new',scope) , function(id,input){
@@ -150,6 +148,11 @@ var td_align = {};
 				$('#panel-reactivar').slideDown();
 			}
 			$('input',scope).resetInput();
+			if(resp.Model){
+				$.each(resp.Model,function(col,val){
+					$('.'+col,scope).val(val);
+				});
+			}
 		},'json').fail(function(xhr){
 			toastr['error'](xhr.status + ' (' + xhr.statusText + ')',"ERROR AL ENVIAR/RECIBIR DATOS" );			
 			$(btn).unlockBtn();
@@ -158,7 +161,7 @@ var td_align = {};
 	$.fn.doEditar = function(cols,visibles){ if(!visibles) visibles = cols;
 		var scope = this;
 		var btn = $('#sbmt-editar'); $(btn).lockBtn();
-		var data = {}
+		var data = {'_token':'<?php echo csrf_token();?>'};
 		var data_old = {};
 		$.each( $('.old',scope) , function(id,input){
 			var name = $(input).attr('name');
@@ -191,7 +194,7 @@ var td_align = {};
 	$.fn.doBorrar = function(cols,visibles){ if(!visibles) visibles = cols;
 		var scope = this;
 		var btn = $('#sbmt-borrar'); $(btn).lockBtn();
-		var data = {}
+		var data = {'_token':'<?php echo csrf_token();?>'};
 		var data_old = {};
 		$.each( $('.old',scope) , function(id,input){
 			var name = $(input).attr('name');
@@ -218,7 +221,7 @@ var td_align = {};
 	$.fn.doReactivar = function(cols,visibles){ if(!visibles) visibles = cols;
 		var scope = this;
 		var btn = $('#sbmt-reactivar'); $(btn).lockBtn();
-		var data = {}
+		var data = {'_token':'<?php echo csrf_token();?>'};
 		var data_old = {};
 		$.each( $('.old',scope) , function(id,input){
 			var name = $(input).attr('name');
