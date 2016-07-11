@@ -14,15 +14,18 @@ class MantenedorController extends BaseController {
 	}
 	function index(){
 		$Lista = $this->Service->listar();
-		return view('DxsRavel.mantenedor.master')->with('Lista',$Lista)->with('Model',$this->Model)->with('puede',$this->puede);
+		return view('DxsRavel::mantenedor.master')->with('Lista',$Lista)->with('Model',$this->Model)->with('puede',$this->puede);
 	}	
 	function agregar(){
 		$new = Input::get('new');
 		$this->response['error'] = $err = !$this->Service->agregar($new);
 		$this->setAjaxMessages( $this->Service->getAjaxMessages() );
-		if(!$err){ $this->response['rows'] = $this->Service->listarNoBorrados(); }else{
+		if(!$err){ 
+			$this->response['rows'] = $this->Service->listarNoBorrados(); 			
+		}else{
 			$this->response['data'] = $this->Service->getLastModel();
-		}
+		}		
+		$this->response['Model'] = $this->Model->newInstance();
 		$this->toJSON();
 	}
 	function editar(){
