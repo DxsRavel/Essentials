@@ -13,8 +13,9 @@ class MantenedorController extends BaseController {
 		return $this->$accion();
 	}
 	function index(){
+		$view = (isset($this->view)?$this->view:'DxsRavel::mantenedor.master');
 		$Lista = $this->Service->listar();
-		return view('DxsRavel::mantenedor.master')->with('Lista',$Lista)->with('Model',$this->Model)->with('puede',$this->puede);
+		return view($view)->with('Lista',$Lista)->with('Model',$this->Model)->with('puede',$this->puede);
 	}	
 	function agregar(){
 		$new = Input::get('new');

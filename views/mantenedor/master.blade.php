@@ -272,18 +272,26 @@ var td_align = {};
 	$(function(){
 		$(document).on('click','.btn-editar',function(){
 			$('#panel-borrar').slideUp();
-			$('#panel-reactivar').slideUp();			
-			if( btn_editar == this){ $('#panel-editar,#panel-agregar').slideToggle();return; }
+			$('#panel-reactivar').slideUp();
+
+			if( btn_editar == this){ 
+				if( $('#panel-editar').is(':visible')){					
+					$('#panel-editar').slideUp();
+					$('#panel-agregar').slideDown();
+					//$('#panel-agregar').show();
+					return; 
+				}
+			}
 			btn_editar = this; 			
-			$('.paneles-accion .panel').hide();
-			$('#panel-agregar').slideUp();
+			$('.paneles-accion .panel').hide();				
 			var tr = $(this).closest('tr');
 			$.each(columns,function(id,column){				
 				$.each(visibles,function(id,column){
-				var type = $('#feditar .'+column).attr('type');
-				if(type!='password') $('#feditar .'+column).val( $('td.'+column,tr).data('value') );	
-			});	
-			});											
+					var type = $('#feditar .'+column).attr('type');
+					if(type!='password') $('#feditar .'+column).val( $('td.'+column,tr).data('value') );	
+				});	
+			});
+			$('#panel-agregar').slideUp();		
 			$('#panel-editar').slideDown();
 		});
 		$('#btn-cancelar-editar').click(function(){			

@@ -1,48 +1,15 @@
 <?php namespace DxsRavel\Essentials\Services;
 
 use DxsRavel\Essentials\Services\BaseService;
-
+use DxsRavel\Essentials\Traits\ServiceCRUD;
 use DB;
 use Exception;
 
 class MantenedorService extends BaseService{
+	use ServiceCRUD {listarArray as listarArrayTrait;}
 	protected $Model;
 	protected $LastModel;
-	function listar($where = [],$select=[],$order=[]){
-		$Query = DB::table($this->Model->getTable());
-				 //->whereNull('FECHA_HORA_BORRADO')
-		foreach($where as $col => $val){
-			$Query = $Query->where($col,$val);
-		}
-		foreach($select as $col){
-			$Query = $Query->addSelect($col);
-		}
-		foreach($order as $c => $t){
-			$Query = $Query->orderBy($c,$t);
-		}
-		$Query = $Query->orderBy($this->Model->getStatusColumn());		
-		return $Query->get();
-	}
-	function listarNoBorrados(){
-		return DB::table($this->Model->getTable())
-				 ->whereNull('FECHA_HORA_BORRADO')
-				 ->orderBy($this->Model->getStatusColumn())
-				 ->get();
-	}
-	function listarActivos($order = []){
-		return DB::table($this->Model->getTable())
-				->whereNull('FECHA_HORA_BORRADO')
-				->where($this->Model->getStatusColumn(),'A')
-				->get();
-	}
-	function listarLista($where = []){
-		$Lista = $this->listar($where);
-		$ret = array(); 
-		foreach($Lista as $Model){
-			$ret[ $this->Model->getHandleKeys($Model) ] =  $Model;
-		}
-		return $ret;
-	}
+
 	function listarArray($where=[],$col = false,$all=false,$order=[],$dummy = false){
 		if(!$col) $col = $this->Model->getColumnInformative();
 		$Lista = $all?$this->listar($where,[],$order):$this->listarActivos($order);
@@ -60,9 +27,16 @@ class MantenedorService extends BaseService{
 		}
 		return $ret;
 	}
+	function listarActivos($order = []){
+		return DB::table($this->Model->getTable())
+				->whereNull('FECHA_HORA_BORRADO')
+				->where($this->Model->getStatusColumn(),'A')
+				->get();
+	}
 	function getLastModel(){
 		return $this->LastModel;
 	}	
+	/*
 	function existe($new){
 		$Query = DB::table( $this->Model->getTable() );
 		foreach($this->Model->getPrimaryKeys() as $column){
@@ -128,7 +102,7 @@ class MantenedorService extends BaseService{
 			$this->title = 'Error en BD';
 			return false;
 		}
-	}
+	}	
 	function reactivar($old){
 		$update_arr = array();
 		try{
@@ -145,4 +119,5 @@ class MantenedorService extends BaseService{
 			return false;
 		}
 	}
+	*/
 }
