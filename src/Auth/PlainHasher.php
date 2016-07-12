@@ -3,18 +3,16 @@
 use RuntimeException;
 use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 
-class Md5Hasher implements HasherContract {
-
-	protected $rounds = 10;
+class PlainHasher implements HasherContract {	
 
 	public function make($value, array $options = array()){
-		return md5($value);
+		return ($value);
 	}
 	public function check($value, $hashedValue, array $options = array()){
-		return md5($value) == $hashedValue;
+		return $value == $hashedValue;
 	}
 	public function needsRehash($hashedValue, array $options = array()){		
-		return md5($hashedValue);
+		return $hashedValue;
 	}
 	
 }
