@@ -10,8 +10,8 @@ class MantenedorService extends BaseService{
 	protected $Model;
 	protected $LastModel;
 
-	function listarArray($where=[],$col = false,$all=false,$order=[],$dummy = false){
-		if(!$col) $col = $this->Model->getColumnInformative();
+	function listarArray($where=[],$col = [],$all=false,$order=[],$dummy = false){
+		//if(!$col) $col = $this->Model->getColumnInformative();
 		$Lista = $all?$this->listar($where,[],$order):$this->listarActivos($order);
 
 		$primaryKeys = $this->Model->getPrimaryKeys();
@@ -23,7 +23,8 @@ class MantenedorService extends BaseService{
 			foreach($primaryKeys as $pk){
 				$id[] = $Row->$pk;
 			}
-			$ret[implode('-',$id)] = $Row->$col;
+			//$ret[implode('-',$id)] = $Row->$col;
+			$ret[implode('-',$id)] = $this->Model->getHandleInformatives($Row,$col);
 		}
 		return $ret;
 	}

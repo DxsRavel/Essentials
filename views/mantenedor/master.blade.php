@@ -5,7 +5,7 @@
 @stop
 
 @section('head_tags')    
-    {!! Html::style('assets/toastr-master/toastr.css') !!}        
+    {!! Html::style('assets/toastr-master/toastr.css') !!}
     {!! Html::style('assets/bootstrap-colorpicker/css/colorpicker.css') !!}
 @stop
 
@@ -65,7 +65,7 @@
 @stop	
 @section('script_tags')
 	@parent		
-	{!! Html::script('assets/toastr-master/toastr.js') !!}	
+	{!! Html::script('assets/toastr-master/toastr.js') !!}
 
 	{!! Html::script('assets/seahorse/seahorse-1.2.js') !!}
   	{!! Html::script('assets/seahorse/seahorse.jquery-1.2.js') !!}

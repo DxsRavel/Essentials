@@ -9,18 +9,18 @@ $.fn.faspin = function(icon) {
   $('<i/>',{class:'fa '+ icon +' fa-spin'}).prependTo(this);
 };  
 $.fn.disableBtn = function(){
-$(this).attr('disabled',true);
+  $(this).attr('disabled',true);
 }
 $.fn.enableBtn = function(){
-$(this).attr('disabled',true);
+  $(this).attr('disabled',true);
 }
 $.fn.lockBtn = function(){
-$(this).faspin('fa-refresh');
-$(this).attr('disabled',true);
+  $(this).faspin('fa-refresh');
+  $(this).attr('disabled',true);
 };
 $.fn.unlockBtn = function(){
-$('.fa-spin',this).remove();
-$(this).attr('disabled',false);
+  $('.fa-spin',this).remove();
+  $(this).attr('disabled',false);
 };
 $.fn.spinIcon = function(sp){
 	if(!sp) sp = 'refresh';
@@ -38,11 +38,11 @@ $.fn.unspinIcon = function(){
 }
 $.fn.resetInput = function(){
 $(this).each(function(){var node = this;
-  var d = $(node).data('default');
-  if( d!=='undefined' ){
+  var d = $(node).data('default');//console.log(d);
+  if( typeof d !=='undefined' ){
     $(node).val(d);
   }else{
-    var tagName = node.tagName;   
+    var tagName = $(node).prop('tagName');//console.log(tagName);
     if(tagName == 'INPUT'){ 
       var type = $(this).attr('type');
       if(type == 'text') $(node).val(''); 
@@ -57,26 +57,26 @@ $(this).each(function(){var node = this;
 });
 };
 $.fn.dataOld = function(){
-var f = this;
-var data_old = {};
-$.each( $('.old',f) , function(id,input){
-  var name = $(input).attr('name');data_old[name] = $(input).val();
-});
-return data_old;
+  var f = this;
+  var data_old = {};
+  $.each( $('.old',f) , function(id,input){
+    var name = $(input).attr('name');data_old[name] = $(input).val();
+  });
+  return data_old;
 };
 $.fn.dataNew = function(){
-var f = this;
-var data_new = {};
-$.each( $('.new',f) , function(id,input){
-  var name = $(input).attr('name');
-  data_new[name] = $(input).val();
-});
-return data_new;
+  var f = this;
+  var data_new = {};
+  $.each( $('.new',f) , function(id,input){
+    var name = $(input).attr('name');
+    data_new[name] = $(input).val();
+  });
+  return data_new;
 }
 $.fn.dataNewSetDefault = function(slctd,callback){
-var f = this;
-var data_new = {};
-$.each( $('.new',f) , function(id,input){		      
+  var f = this;
+  var data_new = {};
+  $.each( $('.new',f) , function(id,input){   
   	var node = this;
   	var tagName = node.tagName;   
   	var def = '';
@@ -84,7 +84,6 @@ $.each( $('.new',f) , function(id,input){
     	def = $(input).val();
     }
     if(tagName == 'SELECT'){
-
       if( $('option[selected]',node).length > 0){
       	def = $('option[selected]',node).attr('value');
       }
@@ -93,9 +92,8 @@ $.each( $('.new',f) , function(id,input){
        $('option:selected',node).attr('selected',true);
       }
     }
-
     $(input).data('default',def);
-});
+  });
 if(callback) callback();
 }
 $.fn.newNoChange = function(){

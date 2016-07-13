@@ -60,18 +60,23 @@ class BaseModel extends Model{
 	}
 	public function getColumnInformative(){
 		if($cols = $this->getInformatives() ){
-			if(count($cols)>1){ throw new \Exception("Más de una columna informativa especificada para modelo", 1); }
+			//if(count($cols)>1){ throw new \Exception("Más de una columna informativa especificada para modelo", 1); }
 			$col = array_shift($cols);			
 			return $col;
 		}
 		return false;
 	}
-	public function getHandleInformatives($Model){
+	public function getHandleInformatives($Model,$cols = []){
 		$infs = array();
-		foreach($this->getInformatives() as $col){
-			$infs[] = $Model->$col;
-		}
-		return implode(' ',$infs);
+		$informatives = (count($cols)>0)?$cols:$this->getInformatives();
+		foreach($informatives as $col){
+			if( property_exists($Model,$col) ){
+				$infs[] = $Model->$col;
+			}else{
+				$infs[] = $col;
+			}
+		}	
+		return implode('',$infs);
 	}
 	public function getPrimaryKeys(){
 		if(!isset($this->primaryKeys)) return false;
@@ -123,7 +128,10 @@ class BaseModel extends Model{
 	function getFillableAndKeys(){
 		return array_unique(array_merge($this->fillable,$this->primaryKeys));
 	}
-	
+	protected function setValues($col,$val){
+		if(!isset($this->inputs[$col])) $this->inputs[$col] = [];
+		$this->inputs[$col]['values'] = $val;
+	}
 	protected function values($col){
 		$Input = $this->getInput($col);
 		if(!isset($Input['values']) ) return false;
@@ -133,7 +141,7 @@ class BaseModel extends Model{
 	function normalize($val,$col){
 		if( ($values = $this->values($col)) && isset($values[$val]) ) return $values[$val];
 		return $val;
-	}
+	}	
 	function tdAlign($col){
 		$Input = $this->getInput($col);
 		if(!isset($Input['td-align']) ) return '';
@@ -149,5 +157,4 @@ class BaseModel extends Model{
 		if(!isset($this->inputs[$column]['seaBehavior'])) return false;
 		return $this->inputs[$column]['seaBehavior'];
 	}
-
 }
