@@ -17,6 +17,9 @@
 			@if($Input['type'] == 'text')					
 			{!! Form::text($column,'', $tags ) !!}
 			@endif
+			@if($Input['type'] == 'number')
+			{!! Form::number($column,'', $tags ) !!}
+			@endif
 			@if($Input['type'] == 'color')					
 			{!! Form::text($column,'', $tags ) !!}
 			@endif

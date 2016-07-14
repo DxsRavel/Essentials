@@ -10,6 +10,9 @@
 			@if($Input['type'] == 'text')					
 			{!! Form::text($column,$Model->$column,array_merge( ['class'=>'form-control new '.$column], $Input['tags']) ) !!}
 			@endif
+			@if($Input['type'] == 'number')					
+			{!! Form::number($column,$Model->$column,array_merge( ['class'=>'form-control new '.$column], $Input['tags']) ) !!}
+			@endif
 			@if($Input['type'] == 'color')					
 			{!! Form::text($column,$Model->$column,array_merge( ['class'=>'form-control new colorpicker '.$column], $Input['tags']) ) !!}
 			@endif			
