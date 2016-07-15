@@ -7,10 +7,16 @@
 	@endforeach
 	@foreach($Model->getFillable() as $column)
 	<?php $Input = $Model->getInput($column);
-	$tags = array_merge( ['class'=>"form-control new $column"] , (isset($Input['tags'])?$Input['tags']:[]) );
+	$base_tags = (isset($Input['check-for-enable']) && $Input['check-for-enable'] == true)?['class'=>"form-control $column",'disabled'=>'']:['class'=>"form-control new $column"];
+	$tags = array_merge( $base_tags , (isset($Input['tags'])?$Input['tags']:[]) );
 	?>
 	<div class="form-group">
-		<label class="col-md-{{ $Input['label-col'] }}">{{ $Model->getLabel($column) }}:</label>
+		<label class="col-md-{{ $Input['label-col'] }}">
+		{{ $Model->getLabel($column) }}:
+		@if( isset($Input['check-for-enable']) && $Input['check-for-enable'] == true )
+		<input type="checkbox" class="dxscheck-for-password">
+		@endif
+		</label>
 		<div class="col-md-{{ $Input['input-col'] }}">
 			@if($Input['type'] == 'text')					
 			{!! Form::text($column,'', $tags) !!}

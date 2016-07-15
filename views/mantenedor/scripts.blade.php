@@ -26,6 +26,18 @@ $(function(){
 		$(this).parent().children('.btn-panel-full-width').show();
 		$(this).hide();
 	});
+	$('.dxscheck-for-password').click(function(){
+		if( $(this).is(':checked') ){
+			$(this).parent().parent().children('div').children('input[type=password]').attr('disabled',false).addClass('new').val('');
+		}else{
+			$(this).parent().parent().children('div').children('input[type=password]').attr('disabled',true).removeClass('new');
+		}
+	});
+	$('#feditar').on('do-editar-success',function(){
+		if( $('.dxscheck-for-password').is(':checked') ){
+			$('.dxscheck-for-password').trigger('click');
+		}
+	})
 });
 </script>
 <script>	
@@ -117,7 +129,7 @@ $(function(){
 				$('input',scope).val('');
 				$('#panel-editar').slideUp();
 				$('#panel-agregar').slideDown();
-				$(scope).trigger('do-editar-success',[resp.rows]);
+				$(scope).trigger('do-editar-success',[resp.rows]);				
 			}
 		},'json').fail(function(xhr){
 			toastr['error'](xhr.status + ' (' + xhr.statusText + ')',"ERROR AL ENVIAR/RECIBIR DATOS" );				
