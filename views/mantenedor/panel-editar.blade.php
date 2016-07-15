@@ -38,8 +38,12 @@
 	</div>
 	@endforeach
 	<div class="pull-right">
-		<a class="btn btn-xs btn-default" id="btn-cancelar-editar"><i class="fa fa-times"></i> Cancelar</a> 
-		<button class="btn btn-xs btn-warning" id="sbmt-editar">Editar <i class="fa fa-pencil"></i></button>
+		<a class="btn btn-xs btn-default" id="btn-cancelar-editar"><i class="fa fa-times"></i>		
+		{{ Config::has('dxsravel.maintainer-label.edit-cancel')?Config::get('dxsravel.maintainer-label.edit-cancel'):'Cancelar' }}
+		</a> 
+		<button class="btn btn-xs btn-warning" id="sbmt-editar">
+		{{ Config::has('dxsravel.maintainer-label.edit-submit')?Config::get('dxsravel.maintainer-label.edit-submit'):'Editar' }}
+		<i class="fa fa-pencil"></i></button>
 	</div>
 	{!! Form::close() !!}
   </div>

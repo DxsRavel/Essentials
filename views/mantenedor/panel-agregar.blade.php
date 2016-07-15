@@ -36,7 +36,9 @@
 	@endforeach
 	<div class="pull-right">
 		{{--<a class="btn btn-xs btn-default " id="btn-cancelar-agregar"> Cancelar</a>--}}
-		<button type="submit" class="btn btn-xs btn-success sbmt-btn" id="sbmt-agregar"> Agregar <i class="fa fa-plus"></i></button>
+		<button type="submit" class="btn btn-xs btn-success sbmt-btn" id="sbmt-agregar"> 
+		{{ Config::has('dxsravel.maintainer-label.add-submit')?Config::get('dxsravel.maintainer-label.add-submit'):'Agregar' }} 
+		<i class="fa fa-plus"></i></button>
 	</div>
 	{!! Form::close() !!}
   </div>

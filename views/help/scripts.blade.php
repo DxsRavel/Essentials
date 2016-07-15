@@ -113,4 +113,18 @@ $.fn.cardCollapse = function(){
 $.fn.cardExpand = function(){
 	materialadmin.AppCard.cardExpand($(this));
 }
+$.fn.colWidthFull = function(){
+  var panel = this;var cs = [];console.log(panel);
+  var cls = $(panel).attr('class').match(/\bcol-\w+-\d+/);
+  if(cls.length > 0) $.each(cls,function(id,c){ cs.push(c); $(panel).removeClass(c); });
+  $(panel).data('classes', cs.join(' ') );
+  $(panel).addClass('col-xs-12');
+}
+$.fn.colWidthBack = function(){
+  var panel = this;var cs = [];
+  var cls = $(panel).attr('class').match(/\bcol-\w+-\d+/);
+  if(cls.length > 0) $.each(cls,function(id,c){ cs.push(c); $(panel).removeClass(c); });        
+  $(panel).addClass( $(panel).data('classes') );
+  $(panel).data('classes','')
+}
 </script>

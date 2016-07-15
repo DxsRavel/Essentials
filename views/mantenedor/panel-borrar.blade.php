@@ -40,8 +40,12 @@
 	@endif
 	@endforeach
 	<div class="pull-right">
-		<a class="btn btn-xs btn-default" id="btn-cancelar-borrar"><i class="fa fa-times"></i> Cancelar</a> 
-		<button class="btn btn-xs btn-danger" id="sbmt-borrar">Borrar <i class="fa fa-trash-o"></i></button>
+		<a class="btn btn-xs btn-default" id="btn-cancelar-borrar"><i class="fa fa-times"></i> 
+		{{ Config::has('dxsravel.maintainer-label.delete-cancel')?Config::get('dxsravel.maintainer-label.delete-cancel'):'Cancelar' }} 
+		</a> 
+		<button class="btn btn-xs btn-danger" id="sbmt-borrar">
+		{{ Config::has('dxsravel.maintainer-label.delete-submit')?Config::get('dxsravel.maintainer-label.delete-submit'):'Borrar' }} 
+		<i class="fa fa-trash-o"></i></button>
 	</div>
 	{!! Form::close() !!}
   </div>			  			  

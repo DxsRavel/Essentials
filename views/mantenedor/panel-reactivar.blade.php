@@ -32,8 +32,12 @@
 		</div>
 		@endforeach
 		<div class="pull-right">
-			<a class="btn btn-xs btn-default " id="btn-cancelar-reactivar"><i class="fa fa-times"></i> Cancelar</a>
-			<button type="submit" class="btn btn-xs btn-warning sbmt-btn" id="sbmt-reactivar"> Reactivar <i class="fa fa-exclamation-triangle"></i></button>
+			<a class="btn btn-xs btn-default " id="btn-cancelar-reactivar"><i class="fa fa-times"></i> 
+			{{ Config::has('dxsravel.maintainer-label.reactivate-cancel')?Config::get('dxsravel.maintainer-label.reactivate-cancel'):'Cancelar' }} 
+			</a>
+			<button type="submit" class="btn btn-xs btn-warning sbmt-btn" id="sbmt-reactivar"> 
+			{{ Config::has('dxsravel.maintainer-label.reactivate-submit')?Config::get('dxsravel.maintainer-label.reactivate-submit'):'Reactivar' }} 
+			<i class="fa fa-exclamation-triangle"></i></button>
 		</div>
 		{!! Form::close() !!}
 	  </div>
