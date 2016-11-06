@@ -1,6 +1,11 @@
 <?php namespace DxsRavel\Essentials\Traits;
 
 use DB;
+use Event;
+
+use DxsRavel\Essentials\Events\ModelCreatedEvent;
+use DxsRavel\Essentials\Events\ModelUpdatedEvent;
+use DxsRavel\Essentials\Events\ModelDeletedEvent;
 
 trait ServiceCRUD{
 	//protected $Model;	
@@ -101,6 +106,7 @@ trait ServiceCRUD{
 			try{
 				$Model->save();
 				$this->title = 'Agregado Correctamente.';
+				Event::fire(new ModelCreatedEvent($Model));
 				return $Model;
 			}catch(PDOException $e){	
 				$this->title = 'ERROR EN BD';		
@@ -124,6 +130,7 @@ trait ServiceCRUD{
 				}
 				$Query->update($update_arr);
 				$this->title = 'Actualizado Correctamente.';
+				Event::fire(new ModelUpdatedEvent($Model));
 				return true;
 			}catch(PDOException $e){			
 				return false;
@@ -140,6 +147,7 @@ trait ServiceCRUD{
 			}
 			//$Query->delete();
 			$Query->update(['FECHA_HORA_BORRADO'=> date('Y-m-d H:i:s')]);
+			Event::fire(new ModelUpdatedEvent($Model));
 			$this->title = 'Borrado Correctamente.';
 			return true;
 		}catch(PDOException $e){			
@@ -154,6 +162,7 @@ trait ServiceCRUD{
 				$Query->where($column,$old[$column]);
 			}
 			$Query->delete();
+			Event::fire(new ModelDeletedEvent($Model));
 			//$Query->update(['FECHA_HORA_BORRADO'=> date('Y-m-d H:i:s')]);
 			$this->title = 'Borrado Correctamente.';
 			return true;
@@ -191,6 +200,7 @@ trait ServiceCRUD{
 			}
 			//$Query->delete();
 			$Query->update(['FECHA_HORA_BORRADO'=> DB::Raw('NULL')]);
+			Event::fire(new ModelUpdatedEvent($Model));
 			$this->title = 'Borrado Correctamente.';
 			return true;
 		}catch(PDOException $e){			
