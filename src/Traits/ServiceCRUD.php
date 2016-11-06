@@ -130,7 +130,7 @@ trait ServiceCRUD{
 				}
 				$Query->update($update_arr);
 				$this->title = 'Actualizado Correctamente.';
-				Event::fire(new ModelUpdatedEvent($Model));
+				Event::fire(new ModelUpdatedEvent($this->Model));
 				return true;
 			}catch(PDOException $e){			
 				return false;
@@ -147,7 +147,7 @@ trait ServiceCRUD{
 			}
 			//$Query->delete();
 			$Query->update(['FECHA_HORA_BORRADO'=> date('Y-m-d H:i:s')]);
-			Event::fire(new ModelUpdatedEvent($Model));
+			Event::fire(new ModelUpdatedEvent($this->Model));
 			$this->title = 'Borrado Correctamente.';
 			return true;
 		}catch(PDOException $e){			
@@ -162,7 +162,7 @@ trait ServiceCRUD{
 				$Query->where($column,$old[$column]);
 			}
 			$Query->delete();
-			Event::fire(new ModelDeletedEvent($Model));
+			Event::fire(new ModelDeletedEvent($this->Model));
 			//$Query->update(['FECHA_HORA_BORRADO'=> date('Y-m-d H:i:s')]);
 			$this->title = 'Borrado Correctamente.';
 			return true;
