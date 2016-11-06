@@ -106,7 +106,7 @@ trait ServiceCRUD{
 			try{
 				$Model->save();
 				$this->title = 'Agregado Correctamente.';
-				Event::fire(new ModelCreatedEvent($Model));
+				Event::fire(new ModelCreatedEvent($this->Model));
 				return $Model;
 			}catch(PDOException $e){	
 				$this->title = 'ERROR EN BD';		
@@ -200,7 +200,7 @@ trait ServiceCRUD{
 			}
 			//$Query->delete();
 			$Query->update(['FECHA_HORA_BORRADO'=> DB::Raw('NULL')]);
-			Event::fire(new ModelUpdatedEvent($Model));
+			Event::fire(new ModelUpdatedEvent($this->Model));
 			$this->title = 'Borrado Correctamente.';
 			return true;
 		}catch(PDOException $e){			
