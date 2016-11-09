@@ -107,14 +107,16 @@ trait ServiceCRUD{
 				$pKeys = $this->Model->getPrimaryKeys();
 				$Model->save();
 				
-				if(count($pKeys) == 1){$pk = array_shift($pKeys);}
-				if(!isset($new[$pk])){
-					try{
-						$Model->$pk = $this->lastInsertId();
-					}catch(\Exception $e){
+				if(count($pKeys) == 1){
+					$pk = array_shift($pKeys);
+					if(!isset($new[$pk])){
+						try{
+							$Model->$pk = $this->lastInsertId();
+						}catch(\Exception $e){
 
+						}
 					}
-				}
+				}				
 
 				$this->title = 'Agregado Correctamente.';
 				Event::fire(new ModelCreatedEvent($Model));
