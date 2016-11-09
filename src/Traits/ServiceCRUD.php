@@ -104,9 +104,20 @@ trait ServiceCRUD{
 				if(isset($new[$column])) $Model->$column = $new[$column];
 			}
 			try{
+				$pKeys = $this->Model->getPrimaryKeys();
 				$Model->save();
+				
+				if(count($pKeys) == 1){$pk = array_shift($pKeys);}
+				if(!isset($new[$pk])){
+					try{
+						$Model->$pk = $this->lastInsertId();
+					}catch(\Exception $e){
+
+					}
+				}
+
 				$this->title = 'Agregado Correctamente.';
-				Event::fire(new ModelCreatedEvent($this->Model));
+				Event::fire(new ModelCreatedEvent($Model));
 				return $Model;
 			}catch(PDOException $e){	
 				$this->title = 'ERROR EN BD';		
