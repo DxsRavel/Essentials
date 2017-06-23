@@ -29,10 +29,12 @@ $_class_col_right = isset($class_col_right)?$class_col_right:'col-md-5';
   	<!--<div class="panel">
   	<div class="panel-body">-->
   		<div class="pull-left">
+  			<!--
 			<div class="btn-group btn-group-xs" role="group">				
 		  		<a href="{{ URL::to('/inicio') }}" class="btn btn-xs btn-default"><i class="fa fa-arrow-left"></i></a>
 		  		<a href="{{ URL::to('/inicio') }}" class="btn btn-xs btn-white">Volver</a>		  		
-		  	</div>  			
+		  	</div>  
+		  	-->			
   		</div>
   		<div class="pull-right">
 	  	<!--
