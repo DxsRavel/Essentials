@@ -9,12 +9,12 @@ $_class_col_right = isset($class_col_right)?$class_col_right:'col-md-5';
 {{ Config::has('dxsravel.maintainer-title')?Config::get('dxsravel.maintainer-title'):'Mantenedor' }} | {{ $Model->getName() }}
 @stop
 
-@section('head_link')    
+@section('head_tags')    
     @parent
     @include('DxsRavel::mantenedor.head-tags')
 @stop
 
-@section('main-content-wrapper')
+@section('main-content')
 <div class="row row-mantenedor row-cabecera">
   <div class="<?php echo $_class_col_left;?>">
       <!--breadcrumbs start -->
@@ -67,11 +67,11 @@ $_class_col_right = isset($class_col_right)?$class_col_right:'col-md-5';
 	</div>
 </div>
 @stop	
-@section('body_pre_script')
+@section('script_tags')
 	@parent		
 	@include('DxsRavel::mantenedor.script-tags')
 @stop
-@section('body_script')
+@section('body_scripts')
 	@parent
 	@include('DxsRavel::mantenedor.scripts')
 @stop

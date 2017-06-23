@@ -147,10 +147,21 @@ class BaseModel extends Model{
 		if(!isset($Input['td-align']) ) return '';
 		return 'text-'.$Input['td-align'];
 	}
+	function hasStatusColumn(){
+		if( $this->statusColumn && $this->statusColumn !== null){ return true; }
+		return false;
+	}
 	function getStatusColumn(){
 		$statusColumn = $this->statusColumn;
 		if(!$statusColumn) return $this->fillable[ count($this->fillable) -1];
 		return $statusColumn;
+	}
+	function hasSoftDeleteColumn(){
+		if($this->softDeleteColumn && $this->softDeleteColumn !== null){return true;}
+	}
+	function getSoftDeleteColumn(){
+		if(!$this->softDeleteColumn){return null;}
+		return $this->softDeleteColumn;
 	}
 	function getSeaBehavior($column){
 		if(!isset($this->inputs[$column])) return false;

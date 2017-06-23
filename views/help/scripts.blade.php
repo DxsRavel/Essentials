@@ -37,24 +37,33 @@ $.fn.unspinIcon = function(){
 	$(this).attr('disabled',false);
 }
 $.fn.resetInput = function(){
-$(this).each(function(){var node = this;
-  var d = $(node).data('default');//console.log(d);
-  if( typeof d !=='undefined' ){
-    $(node).val(d);
-  }else{
-    var tagName = $(node).prop('tagName');//console.log(tagName);
-    if(tagName == 'INPUT'){ 
-      var type = $(this).attr('type');
-      if(type == 'text') $(node).val(''); 
-    }
-    if(tagName == 'SELECT'){
-      if(!$(node).prop('disabled')){
-        $(node).val( $('option:enabled:first',node).val() );
-        $(node).trigger('change');
+  $(this).each(function(){var node = this;
+    var d = $(node).data('default');
+    if( d ){
+      
+      var type = $(this).attr('type');          
+        if(type == 'checkbox'){ 
+          $(node).prop('checked', d ); 
+        }else{
+          $(node).val(d);
+        }
+    }else{
+      var tagName = node.tagName;   
+      if(tagName == 'INPUT'){ 
+        var type = $(this).attr('type');
+        if(type == 'text'){ $(node).val(''); }
+        if(type == 'number'){ $(node).val(''); }
+        if(type == 'checkbox'){ $(node).prop('checked',false); }
+      }
+      if(tagName == 'SELECT'){
+        if(!$(node).prop('disabled')){
+          $(node).val( $('option:enabled:first',node).val() );
+          $(node).trigger('change');
+        }
       }
     }
-  }
-});
+    $(node).trigger('change');
+  });
 };
 $.fn.dataOld = function(){
   var f = this;

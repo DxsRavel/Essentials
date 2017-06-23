@@ -2,6 +2,7 @@
 
 use DB;
 use Event;
+use Exception;
 
 use DxsRavel\Essentials\Events\ModelCreatedEvent;
 use DxsRavel\Essentials\Events\ModelUpdatedEvent;
@@ -36,16 +37,24 @@ trait ServiceCRUD{
 		return $Query->get();
 	}
 	function listarNoBorrados(){
-		return DB::table($this->Model->getTable())
-				 ->whereNull('FECHA_HORA_BORRADO')
-				 ->orderBy($this->Model->getStatusColumn())
-				 ->get();
+		$Query = DB::table($this->Model->getTable());
+		if( $this->Model->hasSoftDeleteColumn() ){
+			$Query = $Query->whereNull($this->Model->getSoftDeleteColumn());
+		}
+		if( $this->Model->hasStatusColumn() ){
+			$Query = $Query->orderBy($this->Model->getStatusColumn());
+		}
+		return $Query->get();
 	}
 	function listarNoNulos(){
-		return DB::table($this->Model->getTable())
-				 ->whereNull('FECHA_HORA_BORRADO')
-				 ->orderBy($this->Model->getStatusColumn())
-				 ->get();
+		$Query = DB::table($this->Model->getTable());
+		if( $this->Model->hasSoftDeleteColumn() ){
+			$Query = $Query->whereNull($this->Model->getSoftDeleteColumn());
+		}
+		if( $this->Model->hasStatusColumn() ){
+			$Query = $Query->orderBy($this->Model->getStatusColumn());
+		}
+		return $Query->get();
 	}
 	function listarLista($where = [],$order=[]){
 		$Lista = $this->listar($where,$order);
@@ -95,9 +104,17 @@ trait ServiceCRUD{
 		if($this->puedeAgregar($new)){
 			if($this->LastModel = $this->existe($new)){
 				$this->title = 'Registro ya Existente';
-				if(isset($this->LastModel->FECHA_HORA_BORRADO) && $this->LastModel->FECHA_HORA_BORRADO){				
+				//dd($this->LastModel);
+				$SoftDeleteColumn = $this->Model->getSoftDeleteColumn();
+				//dd($this->LastModel->$SoftDeleteColumn);
+				if( $Model->hasSoftDeleteColumn() &&
+					//isset($this->LastModel->$SoftDeleteColumn) && 
+					$this->LastModel->$SoftDeleteColumn !== null
+				){				
 					$this->message = 'Puede reactivar el Registro';
-				}else{ $this->LastModel = false;}
+				}else{ 
+					$this->LastModel = false;
+				}
 				return false;
 			}
 			foreach($Model->getFillable() as $column){
@@ -154,15 +171,23 @@ trait ServiceCRUD{
 	function borrarLogico($old){
 		$update_arr = array();
 		try{
+			if(!$this->Model->hasSoftDeleteColumn()){
+				$this->title = 'Error al hacer un Borrado Logico.';
+				$this->message = 'Se necesita especificar un campo para control de Borrado Logico.';
+				throw new Exception("Soft Delete Column is Mandatory for Soft Delete", 1);				
+			}
+
 			$Query = DB::table( $this->Model->getTable() );
 			foreach($this->Model->getPrimaryKeys() as $column){
 				$Query->where($column,$old[$column]);
 			}
 			//$Query->delete();
-			$Query->update(['FECHA_HORA_BORRADO'=> date('Y-m-d H:i:s')]);
+			$Query->update([ $this->Model->getSoftDeleteColumn() => date('Y-m-d H:i:s')]);
 			Event::fire(new ModelUpdatedEvent($this->Model));
 			$this->title = 'Borrado Correctamente.';
 			return true;
+		}catch(Exception $e){
+			return false;
 		}catch(PDOException $e){			
 			return false;
 		}
@@ -175,8 +200,7 @@ trait ServiceCRUD{
 				$Query->where($column,$old[$column]);
 			}
 			$Query->delete();
-			Event::fire(new ModelDeletedEvent($this->Model));
-			//$Query->update(['FECHA_HORA_BORRADO'=> date('Y-m-d H:i:s')]);
+			Event::fire(new ModelDeletedEvent($this->Model));			
 			$this->title = 'Borrado Correctamente.';
 			return true;
 		}catch(PDOException $e){			
@@ -207,12 +231,18 @@ trait ServiceCRUD{
 	function reactivar($old){
 		$update_arr = array();
 		try{
+			if(!$this->Model->hasSoftDeleteColumn()){
+				$this->title = 'Error al hacer un Borrado Logico.';
+				$this->message = 'Se necesita especificar un campo para control de Borrado Logico.';
+				throw new Exception("Soft Delete Column is Mandatory for Soft Delete", 1);				
+			}
+
 			$Query = DB::table( $this->Model->getTable() );
 			foreach($this->Model->getPrimaryKeys() as $column){
 				$Query->where($column,$old[$column]);
 			}
 			//$Query->delete();
-			$Query->update(['FECHA_HORA_BORRADO'=> DB::Raw('NULL')]);
+			$Query->update([ $this->Model->getSoftDeleteColumn() => DB::Raw('NULL')]);
 			Event::fire(new ModelUpdatedEvent($this->Model));
 			$this->title = 'Borrado Correctamente.';
 			return true;

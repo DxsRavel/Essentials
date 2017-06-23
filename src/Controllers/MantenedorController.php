@@ -8,14 +8,35 @@ class MantenedorController extends BaseController {
 	protected $Service;
 	protected $Model;
 	protected $puede = ['agregar'=>true,'editar'=>true,'borrar'=>true];
+	protected $extendsView = 'base';
+	protected $assetsDir = 'assets';
 
 	function post($accion){
 		return $this->$accion();
 	}
 	function index(){
 		$view = (isset($this->view)?$this->view:'DxsRavel::mantenedor.master');
+		$Lista = $this->Service->listarNoBorrados();
+		return 
+			view($view)
+			->with('Lista',$Lista)
+			->with('Model',$this->Model)
+			->with('puede',$this->puede)
+			->with('extendsView',$this->extendsView)
+			->with('assetsDir',$this->assetsDir)
+			;
+	}
+	function indexLegacy(){
+		$view = (isset($this->view)?$this->view:'DxsRavel::mantenedor-legacy.master');
 		$Lista = $this->Service->listar();
-		return view($view)->with('Lista',$Lista)->with('Model',$this->Model)->with('puede',$this->puede);
+		return 
+			view($view)
+			->with('Lista',$Lista)
+			->with('Model',$this->Model)
+			->with('puede',$this->puede)
+			->with('extendsView',$this->extendsView)
+			->with('assetsDir',$this->assetsDir)
+			;
 	}	
 	function agregar(){
 		$new = Input::get('new');

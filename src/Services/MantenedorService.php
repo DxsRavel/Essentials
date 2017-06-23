@@ -29,10 +29,16 @@ class MantenedorService extends BaseService{
 		return $ret;
 	}
 	function listarActivos($order = []){
-		return DB::table($this->Model->getTable())
-				->whereNull('FECHA_HORA_BORRADO')
+		if($this->Model->hasSoftDeleteColumn()){
+			return DB::table($this->Model->getTable())
+				->whereNull($this->Model->getSoftDeleteColumn())
 				->where($this->Model->getStatusColumn(),'A')
 				->get();
+		}else{
+			return DB::table($this->Model->getTable())				
+				->where($this->Model->getStatusColumn(),'A')
+				->get();
+		}		
 	}
 	function getLastModel(){
 		return $this->LastModel;

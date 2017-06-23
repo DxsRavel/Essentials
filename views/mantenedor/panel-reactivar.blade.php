@@ -2,7 +2,7 @@
 	  <div class="panel-heading"><strong>Reactivar</strong></div>
 	  <div class="panel-body">
 		{!! Form::open(array('method'=>'POST','id'=>'freactivar','class'=>'form-horizontal form-xs fagregar','onsubmit'=>'return sbmtReactivar();')) !!}
-		@foreach($Model->getFillableAndKeys() as $column)
+		@foreach($Model->getFillable() as $column)
 		<?php $Input = $Model->getInput($column); 
 		$old = $Model->isPrimaryKey($column)?'old':''; 
 		$tags = array_merge( ['class'=>"form-control $old $column",'readonly'=>'','disabled'=>''], (isset($Input['tags'])?$Input['tags']:[]));
@@ -12,6 +12,9 @@
 			<div class="col-md-{{ $Input['input-col'] }}">
 				@if($Input['type'] == 'text')					
 				{!! Form::text($column,'', $tags ) !!}
+				@endif
+				@if($Input['type'] == 'number')					
+				{!! Form::number($column,'',$tags) !!}
 				@endif
 				@if($Input['type'] == 'color')					
 				{!! Form::text($column,'', $tags ) !!}
