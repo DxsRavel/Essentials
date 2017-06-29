@@ -92,10 +92,14 @@ trait ServiceCRUD{
 			return $this->Model->find($new[$pk]);					
 		}		
 		$Query = DB::table( $this->Model->getTable() );
+		$ModelQuery = $this->Model;
 		foreach( $pKeys as $column){
 			if(!isset($new[$column])) return false;
-			$Query->where($column,$new[$column]);
+			$Query = $Query->where($column,$new[$column]);
+			$ModelQuery = $this->ModelQuery->where($column,$new[$column]);
 		}
+		$this->LastModel = $this->ModelQuery->first();
+		return $this->LastModel;
 		return $Query->first();
 	}
 	protected function puedeAgregar($new){ return true; }
@@ -148,21 +152,29 @@ trait ServiceCRUD{
 	}
 	protected function puedeEditar($old,$new){ return true; }
 	function editar($old,$new){
-		if($this->puedeEditar($old,$new)){
-			$update_arr = array();			
-			foreach($this->Model->getFillable() as $column){
-				if(isset($new[$column])) $update_arr[$column] = $new[$column];			
-			}
-			try{				
-				$Query = DB::table( $this->Model->getTable() );
-				foreach($this->Model->getPrimaryKeys() as $column){
-					$Query->where($column,$old[$column]);
+		if($this->puedeEditar($old,$new)){			
+			if( $this->LastModel = $this->existe($old) ){
+				$update_arr = array();
+				$this->OldModel = $this->LastModel;
+				foreach($this->Model->getFillable() as $column){
+					if(isset($new[$column])){ $update_arr[$column] = $new[$column]; }
+					$this->LastModel->$column = $new[$column];
 				}
-				$Query->update($update_arr);
-				$this->title = 'Actualizado Correctamente.';
-				Event::fire(new ModelUpdatedEvent($this->Model));
-				return true;
-			}catch(PDOException $e){			
+				try{				
+					$Query = DB::table( $this->Model->getTable() );
+					foreach($this->Model->getPrimaryKeys() as $column){
+						$Query->where($column,$old[$column]);
+					}
+					//$Query->update($update_arr);
+					$this->LastModel->save();
+					$this->title = 'Actualizado Correctamente.';
+					Event::fire(new ModelUpdatedEvent($this->OldModel,$this->LastModel));
+					return true;
+				}catch(PDOException $e){			
+					return false;
+				}
+			}else{
+				$this->message = 'Entidad no encontrada';
 				return false;
 			}
 		}
@@ -177,15 +189,29 @@ trait ServiceCRUD{
 				throw new Exception("Soft Delete Column is Mandatory for Soft Delete", 1);				
 			}
 
-			$Query = DB::table( $this->Model->getTable() );
-			foreach($this->Model->getPrimaryKeys() as $column){
-				$Query->where($column,$old[$column]);
+			if( $this->LastModel = $this->existe($old) ){
+				$this->OldModel = $this->LastModel;
+				$Query = DB::table( $this->Model->getTable() );
+				foreach($this->Model->getPrimaryKeys() as $column){
+					$Query->where($column,$old[$column]);
+				}
+				//$Query->delete();
+				$date = date('Y-m-d H:i:s');
+				
+				$softDeleteColumn = $this->Model->getSoftDeleteColumn();
+				$this->LastModel->$softDeleteColumn = $date;
+
+				//$Query->update([ $softDeleteColumn => $date]);
+				$this->LastModel->save();
+				
+				Event::fire(new ModelUpdatedEvent($this->OldModel,$this->LastModel));
+
+				$this->title = 'Borrado Correctamente.';
+				return true;
+			}else{
+				$this->message = 'Entidad no encontrada';
+				return false;
 			}
-			//$Query->delete();
-			$Query->update([ $this->Model->getSoftDeleteColumn() => date('Y-m-d H:i:s')]);
-			Event::fire(new ModelUpdatedEvent($this->Model));
-			$this->title = 'Borrado Correctamente.';
-			return true;
 		}catch(Exception $e){
 			return false;
 		}catch(PDOException $e){			
@@ -195,14 +221,22 @@ trait ServiceCRUD{
 	function borrarFisico($old){
 		$update_arr = array();
 		try{
-			$Query = DB::table( $this->Model->getTable() );
-			foreach($this->Model->getPrimaryKeys() as $column){
-				$Query->where($column,$old[$column]);
+			if( $this->LastModel = $this->existe($old) ){
+				$this->OldModel = $this->LastModel;
+				$Query = DB::table( $this->Model->getTable() );
+				foreach($this->Model->getPrimaryKeys() as $column){
+					$Query->where($column,$old[$column]);
+				}
+				//$Query->delete();
+				$this->LastModel->delete();				
+				Event::fire(new ModelDeletedEvent($this->Model));
+				$this->LastModel = null;
+				$this->title = 'Borrado Correctamente.';
+				return true;
+			}else{
+				$this->message = 'Entidad no encontrada';
+				return false;
 			}
-			$Query->delete();
-			Event::fire(new ModelDeletedEvent($this->Model));			
-			$this->title = 'Borrado Correctamente.';
-			return true;
 		}catch(PDOException $e){			
 			return false;
 		}
@@ -231,21 +265,30 @@ trait ServiceCRUD{
 	function reactivar($old){
 		$update_arr = array();
 		try{
-			if(!$this->Model->hasSoftDeleteColumn()){
-				$this->title = 'Error al hacer un Borrado Logico.';
-				$this->message = 'Se necesita especificar un campo para control de Borrado Logico.';
-				throw new Exception("Soft Delete Column is Mandatory for Soft Delete", 1);				
-			}
+			if( $this->LastModel = $this->existe($old) ){
+				if(!$this->Model->hasSoftDeleteColumn()){
+					$this->title = 'Error al hacer un Borrado Logico.';
+					$this->message = 'Se necesita especificar un campo para control de Borrado Logico.';
+					throw new Exception("Soft Delete Column is Mandatory for Soft Delete", 1);				
+				}
+				$this->OldModel = $this->LastModel;
+				$Query = DB::table( $this->Model->getTable() );
+				foreach($this->Model->getPrimaryKeys() as $column){
+					$Query->where($column,$old[$column]);
+				}
+				//$Query->delete();
+				$softDeleteColumn = $this->Model->getSoftDeleteColumn();
+				//$Query->update([ $this->Model->getSoftDeleteColumn() => DB::Raw('NULL')]);
+				$this->LastModel->$softDeleteColumn = DB::Raw('NULL');
+				$this->LastModel->save();
 
-			$Query = DB::table( $this->Model->getTable() );
-			foreach($this->Model->getPrimaryKeys() as $column){
-				$Query->where($column,$old[$column]);
+				Event::fire(new ModelUpdatedEvent($this->OldModel,$this->LastModel));
+				$this->title = 'Reactivado Correctamente.';
+				return true;
+			}else{
+				$this->message = 'Entidad no encontrada';
+				return false;
 			}
-			//$Query->delete();
-			$Query->update([ $this->Model->getSoftDeleteColumn() => DB::Raw('NULL')]);
-			Event::fire(new ModelUpdatedEvent($this->Model));
-			$this->title = 'Borrado Correctamente.';
-			return true;
 		}catch(PDOException $e){			
 			return false;
 		}

@@ -13,9 +13,9 @@ class ModelCreatedEvent extends Event{
      * Create a new event instance.          
      * @return void
      */
-    public function __construct($Model)
+    public function __construct($NewModel)
     {
-        $this->Model = $Model;
+        $this->Model = $NewModel;
     }
     
     public function broadcastAs()

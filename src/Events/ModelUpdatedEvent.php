@@ -13,8 +13,9 @@ class ModelUpdatedEvent extends Event{
      * Create a new event instance.          
      * @return void
      */
-    public function __construct($Model)
+    public function __construct($OldModel,$NewModel)
     {
-        $this->Model = $Model;
+        $this->OldModel = $OldModel;
+        $this->Model = $NewModel;
     }
 }
