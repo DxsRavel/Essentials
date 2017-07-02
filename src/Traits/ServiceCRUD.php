@@ -107,10 +107,8 @@ trait ServiceCRUD{
 		$Model = clone $this->Model;
 		if($this->puedeAgregar($new)){
 			if($this->LastModel = $this->existe($new)){
-				$this->title = 'Registro ya Existente';
-				//dd($this->LastModel);
-				$SoftDeleteColumn = $this->Model->getSoftDeleteColumn();
-				//dd($this->LastModel->$SoftDeleteColumn);
+				$this->title = 'Registro ya Existente';				
+				$SoftDeleteColumn = $this->Model->getSoftDeleteColumn();				
 				if( $Model->hasSoftDeleteColumn() &&
 					//isset($this->LastModel->$SoftDeleteColumn) && 
 					$this->LastModel->$SoftDeleteColumn !== null
@@ -126,21 +124,24 @@ trait ServiceCRUD{
 			}
 			try{
 				$pKeys = $this->Model->getPrimaryKeys();
-				$Model->save();
+				$this->LastModel = clone $Model;
+				$Model->save(); // Cuando hace save() se borran los atributos pk				
 				
 				if(count($pKeys) == 1){
+					$fillable_arr = $Model->getFillable();
 					$pk = array_shift($pKeys);
-					if(!isset($new[$pk])){
-						try{
+					if(!isset($new[$pk]) && !in_array($pk, $fillable_arr)){
+						try{							
 							$Model->$pk = $this->lastInsertId();
+							$this->LastModel->$pk = $this->lastInsertId();
 						}catch(\Exception $e){
 
 						}
 					}
 				}				
-
+				
 				$this->title = 'Agregado Correctamente.';
-				Event::fire(new ModelCreatedEvent($Model));
+				Event::fire(new ModelCreatedEvent($this->LastModel));
 				return $Model;
 			}catch(PDOException $e){	
 				$this->title = 'ERROR EN BD';		
