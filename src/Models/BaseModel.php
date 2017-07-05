@@ -107,6 +107,15 @@ class BaseModel extends Model{
 		}
 		return false;
 	}
+	public function getPkNameValue(){
+		$vals = [];
+		if($pks = $this->getPrimaryKeys() ){
+			foreach($pks as $pk){
+				$vals[$pk] = $this->$pk;			
+			}			
+		}
+		return $vals;
+	}
 	public function getLabel($col){
 		if(isset($this->labels[$col])) return $this->labels[$col];
 		return '{'.$col.'}';
