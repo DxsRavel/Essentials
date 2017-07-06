@@ -96,7 +96,7 @@ trait ServiceCRUD{
 		foreach( $pKeys as $column){
 			if(!isset($new[$column])) return false;
 			$Query = $Query->where($column,$new[$column]);
-			$ModelQuery = $this->ModelQuery->where($column,$new[$column]);
+			$this->ModelQuery = $this->ModelQuery->where($column,$new[$column]);
 		}
 		$this->LastModel = $this->ModelQuery->first();
 		return $this->LastModel;
@@ -156,7 +156,7 @@ trait ServiceCRUD{
 		if($this->puedeEditar($old,$new)){			
 			if( $this->LastModel = $this->existe($old) ){
 				$update_arr = array();
-				$this->OldModel = $this->LastModel;
+				$this->OldModel = clone $this->LastModel;
 				foreach($this->Model->getFillable() as $column){
 					if(isset($new[$column])){ $update_arr[$column] = $new[$column]; }
 					$this->LastModel->$column = $new[$column];
@@ -191,7 +191,7 @@ trait ServiceCRUD{
 			}
 
 			if( $this->LastModel = $this->existe($old) ){
-				$this->OldModel = $this->LastModel;
+				$this->OldModel = clone $this->LastModel;
 				$Query = DB::table( $this->Model->getTable() );
 				foreach($this->Model->getPrimaryKeys() as $column){
 					$Query->where($column,$old[$column]);
@@ -223,7 +223,7 @@ trait ServiceCRUD{
 		$update_arr = array();
 		try{
 			if( $this->LastModel = $this->existe($old) ){
-				$this->OldModel = $this->LastModel;
+				$this->OldModel = clone $this->LastModel;
 				$Query = DB::table( $this->Model->getTable() );
 				foreach($this->Model->getPrimaryKeys() as $column){
 					$Query->where($column,$old[$column]);
@@ -272,7 +272,7 @@ trait ServiceCRUD{
 					$this->message = 'Se necesita especificar un campo para control de Borrado Logico.';
 					throw new Exception("Soft Delete Column is Mandatory for Soft Delete", 1);				
 				}
-				$this->OldModel = $this->LastModel;
+				$this->OldModel = clone $this->LastModel;
 				$Query = DB::table( $this->Model->getTable() );
 				foreach($this->Model->getPrimaryKeys() as $column){
 					$Query->where($column,$old[$column]);
