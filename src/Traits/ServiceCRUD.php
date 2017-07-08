@@ -158,8 +158,10 @@ trait ServiceCRUD{
 				$update_arr = array();
 				$this->OldModel = clone $this->LastModel;
 				foreach($this->Model->getFillable() as $column){
-					if(isset($new[$column])){ $update_arr[$column] = $new[$column]; }
-					$this->LastModel->$column = $new[$column];
+					if(isset($new[$column])){ 
+						$update_arr[$column] = $new[$column]; 
+						$this->LastModel->$column = $new[$column];
+					}
 				}
 				try{				
 					$Query = DB::table( $this->Model->getTable() );
