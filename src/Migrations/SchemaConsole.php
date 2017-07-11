@@ -6,7 +6,7 @@ use Illuminate\Database\Schema\Builder;
 
 use View, Input, Session, Redirect, DB,Validator, Schema, Closure ;
 
-class SchemaUtil extends Builder{	
+class SchemaConsole extends Builder{	
 	
 	public static function createTable($table, Closure $callback)
     {
