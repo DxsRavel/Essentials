@@ -1,4 +1,5 @@
-<?php namespace DxsRavel\Essentials\Traits;
+<?php 
+namespace DxsRavel\Essentials\Traits;
 
 use DB;
 use Event;
@@ -86,21 +87,21 @@ trait ServiceCRUD{
 	public function existe($new){
 		$pKeys = $this->Model->getPrimaryKeys();		
 		if(count($pKeys) == 1){
-			$pk = array_shift($pKeys);
-			//dd($new[$pk]);
+			$pk = array_shift($pKeys);			
 			if(!isset($new[$pk])) return false;
 			return $this->Model->find($new[$pk]);					
 		}		
-		$Query = DB::table( $this->Model->getTable() );
-		$this->ModelQuery = clone $this->Model;
+		//$Query = DB::table( $this->Model->getTable() );		
+		$this->ModelQuery = clone $this->Model;		
+		//$this->ModelQuery = $this->Model->newQuery();
 		foreach( $pKeys as $column){
 			if(!isset($new[$column])) return false;
-			$Query = $Query->where($column,$new[$column]);
-			$this->ModelQuery = $this->ModelQuery->where($column,$new[$column]);
-		}
+			//$Query = $Query->where($column,$new[$column]);
+			$this->ModelQuery->where($column,$new[$column]);
+		}		
 		$this->LastModel = $this->ModelQuery->first();
 		return $this->LastModel;
-		return $Query->first();
+		//return $Query->first();
 	}
 	protected function puedeAgregar($new){ return true; }
 	function agregar($new){
@@ -152,9 +153,10 @@ trait ServiceCRUD{
 		return false;	
 	}
 	protected function puedeEditar($old,$new){ return true; }
-	function editar($old,$new){
+	function editar($old,$new){ echo '_editar_';
 		if($this->puedeEditar($old,$new)){			
 			if( $this->LastModel = $this->existe($old) ){
+				//dd($this->LastModel);
 				$update_arr = array();
 				$this->OldModel = clone $this->LastModel;
 				foreach($this->Model->getFillable() as $column){
@@ -164,10 +166,13 @@ trait ServiceCRUD{
 					}
 				}
 				try{				
-					$Query = DB::table( $this->Model->getTable() );
+					//$Query = DB::table( $this->Model->getTable() );
+					/*
+					$Query = $this->Model->newQuery();
 					foreach($this->Model->getPrimaryKeys() as $column){
 						$Query->where($column,$old[$column]);
 					}
+					*/
 					//$Query->update($update_arr);
 					$this->LastModel->save();
 					$this->title = 'Actualizado Correctamente.';
@@ -296,4 +301,6 @@ trait ServiceCRUD{
 			return false;
 		}
 	}
+
+	
 }
