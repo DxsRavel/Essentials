@@ -153,7 +153,7 @@ trait ServiceCRUD{
 		return false;	
 	}
 	protected function puedeEditar($old,$new){ return true; }
-	function editar($old,$new){ echo '_editar_';
+	function editar($old,$new){
 		if($this->puedeEditar($old,$new)){			
 			if( $this->LastModel = $this->existe($old) ){
 				//dd($this->LastModel);
@@ -166,15 +166,14 @@ trait ServiceCRUD{
 					}
 				}
 				try{				
-					//$Query = DB::table( $this->Model->getTable() );
-					/*
+					$Query = DB::table( $this->Model->getTable() );					
 					$Query = $this->Model->newQuery();
 					foreach($this->Model->getPrimaryKeys() as $column){
 						$Query->where($column,$old[$column]);
-					}
-					*/
-					//$Query->update($update_arr);
-					$this->LastModel->save();
+					}					
+					$Query->update($update_arr);
+					
+					//$this->LastModel->save();
 					$this->title = 'Actualizado Correctamente.';
 					Event::fire(new ModelUpdatedEvent($this->OldModel,$this->LastModel));
 					return true;
@@ -202,15 +201,14 @@ trait ServiceCRUD{
 				$Query = DB::table( $this->Model->getTable() );
 				foreach($this->Model->getPrimaryKeys() as $column){
 					$Query->where($column,$old[$column]);
-				}
-				//$Query->delete();
+				}				
 				$date = date('Y-m-d H:i:s');
 				
 				$softDeleteColumn = $this->Model->getSoftDeleteColumn();
 				$this->LastModel->$softDeleteColumn = $date;
 
-				//$Query->update([ $softDeleteColumn => $date]);
-				$this->LastModel->save();
+				$Query->update([ $softDeleteColumn => $date]);
+				//$this->LastModel->save();
 				
 				Event::fire(new ModelUpdatedEvent($this->OldModel,$this->LastModel));
 
@@ -235,8 +233,8 @@ trait ServiceCRUD{
 				foreach($this->Model->getPrimaryKeys() as $column){
 					$Query->where($column,$old[$column]);
 				}
-				//$Query->delete();
-				$this->LastModel->delete();				
+				$Query->delete();
+				//$this->LastModel->delete();				
 				Event::fire(new ModelDeletedEvent($this->Model));
 				$this->LastModel = null;
 				$this->title = 'Borrado Correctamente.';
@@ -286,9 +284,10 @@ trait ServiceCRUD{
 				}
 				//$Query->delete();
 				$softDeleteColumn = $this->Model->getSoftDeleteColumn();
-				//$Query->update([ $this->Model->getSoftDeleteColumn() => DB::Raw('NULL')]);
+				$Query->update([ $this->Model->getSoftDeleteColumn() => DB::Raw('NULL')]);
+				
 				$this->LastModel->$softDeleteColumn = DB::Raw('NULL');
-				$this->LastModel->save();
+				//$this->LastModel->save();
 
 				Event::fire(new ModelUpdatedEvent($this->OldModel,$this->LastModel));
 				$this->title = 'Reactivado Correctamente.';
