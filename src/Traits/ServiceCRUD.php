@@ -96,12 +96,12 @@ trait ServiceCRUD{
 		//$this->ModelQuery = $this->Model->newQuery();
 		foreach( $pKeys as $column){
 			if(!isset($new[$column])) return false;
-			//$Query = $Query->where($column,$new[$column]);
-			$this->ModelQuery->where($column,$new[$column]);
+			$Query = $Query->where($column,$new[$column]);
+			$this->ModelQuery = $this->ModelQuery->where($column,$new[$column]);
 		}		
 		$this->LastModel = $this->ModelQuery->first();
-		return $this->LastModel;
-		//return $Query->first();
+		//return $this->LastModel;
+		return $Query->first();
 	}
 	protected function puedeAgregar($new){ return true; }
 	function agregar($new){
