@@ -91,7 +91,7 @@ trait ServiceCRUD{
 			if(!isset($new[$pk])) return false;
 			return $this->Model->find($new[$pk]);					
 		}		
-		//$Query = DB::table( $this->Model->getTable() );		
+		$Query = DB::table( $this->Model->getTable() );		
 		$this->ModelQuery = clone $this->Model;		
 		//$this->ModelQuery = $this->Model->newQuery();
 		foreach( $pKeys as $column){
