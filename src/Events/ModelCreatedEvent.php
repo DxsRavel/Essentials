@@ -8,14 +8,16 @@ use Illuminate\Queue\SerializesModels;
 class ModelCreatedEvent extends Event{
     use SerializesModels;
     public $Model;
+    public $NewModel;
 
     /**
      * Create a new event instance.          
      * @return void
      */
-    public function __construct($NewModel)
+    public function __construct($Model,$NewModel)
     {
-        $this->Model = $NewModel;
+        $this->Model = $Model;
+        $this->NewModel = $NewModel;
     }
     
     public function broadcastAs()

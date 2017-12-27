@@ -8,13 +8,15 @@ use Illuminate\Queue\SerializesModels;
 class ModelDeletedEvent extends Event{
     use SerializesModels;
     public $Model;
+    public $NewModel;
 
     /**
      * Create a new event instance.          
      * @return void
      */
-    public function __construct($Model)
+    public function __construct($Model, $NewModel)
     {
         $this->Model = $Model;
+        $this->NewModel = $NewModel;
     }
 }
