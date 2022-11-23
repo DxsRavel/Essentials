@@ -1,18 +1,22 @@
-<?php namespace DxsRavel\Essentials\Auth;
+<?php 
+namespace DxsRavel\Essentials\Auth;
 
 use RuntimeException;
+use Illuminate\Hashing\AbstractHasher;
 use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 
-class Md5Hasher implements HasherContract {
+class Md5Hasher extends AbstractHasher implements HasherContract {
 
 	protected $rounds = 10;
 
 	public function make($value, array $options = array()){
 		return md5($value);
 	}
+
 	public function check($value, $hashedValue, array $options = array()){
 		return md5($value) == $hashedValue;
 	}
+
 	public function needsRehash($hashedValue, array $options = array()){		
 		return md5($hashedValue);
 	}
