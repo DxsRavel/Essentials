@@ -1,8 +1,7 @@
 <?php namespace DxsRavel\Essentials\Controllers;
 
 use DxsRavel\Essentials\Controllers\BaseController;
-
-use Input;
+use Illuminate\Http\Request;
 
 class MantenedorController extends BaseController {
 	protected $Service;
@@ -38,8 +37,8 @@ class MantenedorController extends BaseController {
 			->with('assetsDir',$this->assetsDir)
 			;
 	}	
-	function agregar(){
-		$new = Input::get('new');
+	function agregar(Request $request){
+		$new = $request->input('new');
 		$this->response['error'] = $err = !$this->Service->agregar($new);
 		$this->setAjaxMessages( $this->Service->getAjaxMessages() );
 		if(!$err){ 
@@ -50,24 +49,24 @@ class MantenedorController extends BaseController {
 		$this->response['Model'] = $this->Model->newInstance();
 		$this->toJSON();
 	}
-	function editar(){
-		$old = Input::get('old');
-		$new = Input::get('new');
+	function editar(Request $request){
+		$old = $request->input('old');
+		$new = $request->input('new');
 		$this->response['error'] = $err = !$this->Service->editar($old,$new);
 		$this->setAjaxMessages( $this->Service->getAjaxMessages() );
 		//$this->response['query'] = $this->Service->getLastQuery();
 		if(!$err){ $this->response['rows'] = $this->Service->listarNoBorrados(); }
 		$this->toJSON();
 	}
-	function borrar(){
-		$old = Input::get('old');
+	function borrar(Request $request){
+		$old = $request->input('old');
 		$this->response['error'] = $err = !$this->Service->borrar($old);
 		$this->setAjaxMessages( $this->Service->getAjaxMessages() );		
 		if(!$err){ $this->response['rows'] = $this->Service->listarNoBorrados(); }
 		$this->toJSON();
 	}
-	function reactivar(){
-		$old = Input::get('old');
+	function reactivar(Request $request){
+		$old = $request->input('old');
 		$this->response['error'] = $err = !$this->Service->reactivar($old);
 		$this->setAjaxMessages( $this->Service->getAjaxMessages() );		
 		if(!$err){ $this->response['rows'] = $this->Service->listarNoBorrados(); }
