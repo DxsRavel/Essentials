@@ -4,7 +4,7 @@ namespace DxsRavel\Essentials\Migrations;
 use DxsRavel\Essentials\Controllers\BaseController;
 use Illuminate\Database\Schema\Builder;
 
-use View, Session, Redirect, DB, Validator, Schema, Closure;
+use Schema, Closure;
 
 class SchemaConsole extends Builder{	
 	

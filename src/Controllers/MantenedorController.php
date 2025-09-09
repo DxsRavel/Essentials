@@ -10,8 +10,8 @@ class MantenedorController extends BaseController {
 	protected $extendsView = 'base';
 	protected $assetsDir = 'assets';
 
-	function post($accion){
-		return $this->$accion();
+	function post(Request $request, $accion){
+		return $this->$accion($request);
 	}
 	function index(){
 		$view = (isset($this->view)?$this->view:'DxsRavel::mantenedor.master');
