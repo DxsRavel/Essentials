@@ -2,7 +2,6 @@
 namespace DxsRavel\Essentials\Traits;
 
 use DB;
-use Event;
 use Exception;
 
 use DxsRavel\Essentials\Events\ModelCreatedEvent;
@@ -142,7 +141,7 @@ trait ServiceCRUD{
 				}				
 				
 				$this->title = 'Agregado Correctamente.';
-				Event::fire(new ModelCreatedEvent($this->LastModel, $this->Model));
+				event(new ModelCreatedEvent($this->LastModel, $this->Model));
 				return $Model;
 			}catch(PDOException $e){	
 				$this->title = 'ERROR EN BD';		
@@ -175,7 +174,7 @@ trait ServiceCRUD{
 					
 					//$this->LastModel->save();
 					$this->title = 'Actualizado Correctamente.';
-					Event::fire(new ModelUpdatedEvent($this->OldModel, $this->LastModel, $this->Model));
+					event(new ModelUpdatedEvent($this->OldModel, $this->LastModel, $this->Model));
 					return true;
 				}catch(PDOException $e){			
 					return false;
@@ -210,7 +209,7 @@ trait ServiceCRUD{
 				$Query->update([ $softDeleteColumn => $date]);
 				//$this->LastModel->save();
 				
-				Event::fire(new ModelUpdatedEvent($this->OldModel, $this->LastModel, $this->Model));
+				event(new ModelUpdatedEvent($this->OldModel, $this->LastModel, $this->Model));
 
 				$this->title = 'Borrado Correctamente.';
 				return true;
@@ -235,7 +234,7 @@ trait ServiceCRUD{
 				}
 				$Query->delete();
 				//$this->LastModel->delete();				
-				Event::fire(new ModelDeletedEvent($this->OldModel, $this->Model));
+				event(new ModelDeletedEvent($this->OldModel, $this->Model));
 				$this->LastModel = null;
 				$this->title = 'Borrado Correctamente.';
 				return true;
@@ -289,7 +288,7 @@ trait ServiceCRUD{
 				$this->LastModel->$softDeleteColumn = DB::Raw('NULL');
 				//$this->LastModel->save();
 
-				Event::fire(new ModelUpdatedEvent($this->OldModel, $this->LastModel, $this->Model));
+				event(new ModelUpdatedEvent($this->OldModel, $this->LastModel, $this->Model));
 				$this->title = 'Reactivado Correctamente.';
 				return true;
 			}else{
