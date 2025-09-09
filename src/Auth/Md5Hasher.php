@@ -7,6 +7,10 @@ class Md5Hasher implements HasherContract {
 
 	protected $rounds = 10;
 
+	public function info($hashedValue) {
+		return [];
+	}
+
 	public function make($value, array $options = array()){
 		return md5($value);
 	}

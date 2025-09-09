@@ -5,6 +5,10 @@ use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 
 class PlainHasher implements HasherContract {	
 
+	public function info($hashedValue) {
+		return [];
+	}
+	
 	public function make($value, array $options = array()){
 		return ($value);
 	}
